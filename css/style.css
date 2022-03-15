@@ -1,0 +1,19 @@
+header {
+    text-align: center;
+    background: green;
+    color: white;
+    line-height: 50px;
+}
+footer{
+    text-align: center;
+    background: green;
+    color: white;
+    line-height: 50px;
+}
+body > content{
+    background-color: blue;
+    color: white;
+    display: block;
+    padding: 25px 45px;
+    margin: 0 50px;
+}
