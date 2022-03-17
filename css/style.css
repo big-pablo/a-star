@@ -1,3 +1,14 @@
 *{
     text-align: center;
 }
+.action-button{
+    color: blue;
+}
+td{
+    background-color: black;
+}
+div{
+    background-color: red;
+    display: table;
+    align-self: center;
+}
