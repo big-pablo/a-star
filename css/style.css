@@ -1,14 +1,46 @@
-*{
+* {
     text-align: center;
 }
-.action-button{
+
+.action-button {
     color: blue;
 }
-td{
-    background-color: black;
+
+td.pass {
+    background-color: hsl(0, 0%, 90%);
 }
-div{
+
+td.pass:hover {
+    background-color: hsl(0, 0%, 95%);
+    cursor: pointer;
+}
+
+td.pass:active {
+    background-color: hsl(0, 0%, 100%);
+    cursor: pointer;
+}
+
+td.impass {
+    background-color: hsl(0, 0%, 20%);
+}
+
+td.impass:hover {
+    background-color: hsl(0, 0%, 25%);
+    cursor: pointer;
+}
+
+td.impass:active {
+    background-color: hsl(0, 0%, 30%);
+    cursor: pointer;
+}
+
+table {
+	border: none;
+    border-collapse: collapse;
+}
+
+div {
     background-color: red;
     display: table;
-    align-self: center;
+    margin: 12px auto;
 }
