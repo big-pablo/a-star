@@ -40,7 +40,6 @@ table {
 }
 
 div {
-    background-color: red;
     display: table;
     margin: 12px auto;
 }
