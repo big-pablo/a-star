@@ -6,32 +6,9 @@
     color: blue;
 }
 
-td.pass {
-    background-color: hsl(0, 0%, 90%);
-}
-
-td.pass:hover {
-    background-color: hsl(0, 0%, 95%);
-    cursor: pointer;
-}
-
-td.pass:active {
-    background-color: hsl(0, 0%, 100%);
-    cursor: pointer;
-}
-
-td.impass {
-    background-color: hsl(0, 0%, 20%);
-}
-
-td.impass:hover {
-    background-color: hsl(0, 0%, 25%);
-    cursor: pointer;
-}
-
-td.impass:active {
-    background-color: hsl(0, 0%, 30%);
-    cursor: pointer;
+.container {
+    display: table;
+    margin: 20px auto;
 }
 
 table {
@@ -39,7 +16,73 @@ table {
     border-collapse: collapse;
 }
 
-div {
-    display: table;
-    margin: 12px auto;
+.content {
+    height: 50px;
+    width: 50px;
+}
+
+.start {
+    background-color: hsl(140, 100%, 30%) !important;
+    cursor: pointer;
+}
+
+.start:hover {
+    background-color: hsl(140, 100%, 35%) !important;
+    cursor: pointer;
+}
+
+.start:active {
+    background-color: hsl(140, 100%, 40%) !important;
+    cursor: pointer;
+}
+
+.finish {
+    background-color: hsl(350, 80%, 50%) !important;
+    cursor: pointer;
+}
+
+.finish:hover {
+    background-color: hsl(350, 90%, 58%) !important;
+    cursor: pointer;
+}
+
+.finish:active {
+    background-color: hsl(350, 100%, 66%) !important;
+    cursor: pointer;
+}
+
+.pass {
+    background-color: hsl(0, 0%, 90%);
+}
+
+.pass:hover {
+    background-color: hsl(0, 0%, 95%);
+    cursor: pointer;
+}
+
+.pass:active {
+    background-color: hsl(0, 0%, 100%);
+    cursor: pointer;
+}
+
+.impass {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.impass:hover {
+    background-color: hsl(0, 0%, 25%);
+    cursor: pointer;
+}
+
+.impass:active {
+    background-color: hsl(0, 0%, 30%);
+    cursor: pointer;
+}
+
+#selectstart {
+    color: hsl(140, 100%, 30%);
+}
+
+#selectfinish {
+    color: hsl(350, 80%, 50%);
 }
