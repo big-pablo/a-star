@@ -53,7 +53,7 @@ function generate(){
 
 function generatemaze()
 {
-  var size = document.getElementById("size").value; //todo: как-нибудь запоминать сайз, чтобы при изменении размера в input, всё не ломалось
+  var size = parseInt(document.getElementById("size").value); //todo: как-нибудь запоминать сайз, чтобы при изменении размера в input, всё не ломалось
   for (let i = 0; i < size; i++)
   {
     for (let k = 0; k < size; k++)
@@ -105,7 +105,7 @@ function generatemaze()
           }
           break;
         case 'down':
-          if (y+2 >= 0 && document.getElementById(x + " " + (y+2)).className == "pass")
+          if (y+2 < size && document.getElementById(x + " " + (y+2)).className == "pass")
           {
             document.getElementById(x + " " + (y+1)).className = "pass";
             directions.splice(0,directions.length-1);
@@ -119,10 +119,11 @@ function generatemaze()
           }
           break;
         case 'right':
-          if (x+2>=0 && document.getElementById((x+2) + " " + y).className == "pass") //Пофиксить разбиванием на два ifы
+          if (x+2 < size && document.getElementById((x+2) + " " + y).className == "pass") //Пофиксить разбиванием на два ifы
           {
-            document.getElementById((x+1) + " " + y).className = "pass";
-            directions.splice(0,directions.length-1);
+           // console.log((x+2) + " " + y);
+           document.getElementById((x+1) + " " + y).className = "pass";
+           directions.splice(0,directions.length-1);
           }
           break;
       }
