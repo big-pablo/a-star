@@ -94,7 +94,8 @@ function generatemaze()
     var directions = ['up','down','left','right'];
     while (directions.length > 0)
     {
-      var direction = getRandomIntInclusive(1,4);
+      var direction = getRandomIntInclusive(0,directions.length-1);
+      console.log(directions[direction]);
       switch(directions[direction])
       {
         case 'up':
@@ -121,7 +122,6 @@ function generatemaze()
         case 'right':
           if (x+2 < size && document.getElementById((x+2) + " " + y).className == "pass") //Пофиксить разбиванием на два ifы
           {
-           // console.log((x+2) + " " + y);
            document.getElementById((x+1) + " " + y).className = "pass";
            directions.splice(0,directions.length-1);
           }
