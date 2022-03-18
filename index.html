@@ -2,16 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hello there!</title>
+    <title>Алгоритм A*</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" >
     <script src="/js/script.js"></script>
   </head>
   <body>
-    <h2>Алгоритм А*</h2>
+    <h2>Алгоритм A*</h2>
     <p>Введите размер матрицы</p>
     <input type="text" id="size">
     <button class="action-button" id="confirm" onclick="generate()">Подтвердить</button>
     <button class="action-button" id="reset" onclick="window.location.reload()">Сбросить</button>
     <button class="action-button" id="generatemaze" onclick="generatemaze()">Генерировать лабиринт</button>
+    <button class="action-button" id="selectstart" onclick="selectstart()">Выбрать начало</button>
+    <button class="action-button" id="selectfinish" onclick="selectfinish()">Выбрать конец</button>
   </body>
 </html>

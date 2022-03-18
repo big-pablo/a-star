@@ -1,11 +1,15 @@
 console.log("Test");
-var tablegenerated = false; //Проверялка
+var tableGenerated = false; //Проверялка
+var selectingStart = false;
+var selectingFinish = false;
+
 function generate(){
-  if (tablegenerated == false)
+  if (tableGenerated == false)
   {
     var body = document.getElementsByTagName("body")[0];
     var size = document.getElementById("size").value;
-    var div = document.createElement("div");
+    var container = document.createElement("container");
+    container.className = "container";
     console.log(size);
     var tbl = document.createElement("table");
     for (var i = 0; i < parseInt(size); i++) 
@@ -15,30 +19,44 @@ function generate(){
         {
           var cell = document.createElement("td");
           row.appendChild(cell);
-          var txt = document.createElement("p");
-          cell.appendChild(txt);
-          txt.innerText = "             "; //Пофиксил, вставив невидимые символы
+          var content = document.createElement("div"); //Чтобы текст случайно не выделялся, заменил его на div'ы фиксированного размера
+          content.className = "content";
+          cell.appendChild(content);
+          cell.id = i + " " + j;
           //Теперь координаты задаются как x y
-          cell.setAttribute("id", i + " " + j);
           cell.setAttribute("xcoord", i); //Добавил кастомные атрибуты чтобы можно было выдёргивать координаты х и у отдельно
           cell.setAttribute("ycoord", j);
-          cell.setAttribute("class", "pass");
-         // console.log(cell.getAttribute("id"));
+          cell.className = "pass";
         }
         tbl.appendChild(row);
     }
-    div.appendChild(tbl)
-    body.appendChild(div);
-    tablegenerated = true;
+    container.appendChild(tbl)
+    body.appendChild(container);
+    tableGenerated = true;
     let cells = document.querySelectorAll("td");
     cells.forEach(function (element)
     {
-        element.onclick = function () {
-          if (element.className === "pass")
+        element.onclick = function ()
+        {
+          if (selectingStart)
+          {
+            element.className = "start pass";
+            var button = document.getElementById("selectstart")
+            button.style.color = "hsl(140, 100%, 30%)";
+            selectingStart = false;
+          }
+          else if (selectingFinish)
+          {
+            element.className = "finish pass";
+            var button = document.getElementById("selectfinish")
+            button.style.color = "hsl(350, 80%, 50%)";
+            selectingFinish = false;
+          }
+          else if (element.classList.contains("pass"))
           {
             element.className = "impass";
           }
-          else if (element.className === "impass")
+          else if (element.classList.contains("impass"))
           {
             element.className = "pass";
           }
@@ -48,6 +66,46 @@ function generate(){
   else
   {
     alert("Таблица уже создана");  //Добавил проверку на созданность таблицы
+  }
+}
+
+function selectstart()
+{
+  if (tableGenerated)
+  {
+    selectingStart = true;
+    selectingFinish = false;
+    var button = document.getElementById("selectstart")
+    button.style.color = "grey";
+    var start = document.querySelector(".start");
+    if (start != null)
+    {
+      start.className = "pass";
+    }
+  }
+  else
+  {
+    alert("Создайте таблицу");
+  }
+}
+
+function selectfinish()
+{
+  if (tableGenerated)
+  {
+    selectingFinish = true;
+    selectingStart = false;
+    var button = document.getElementById("selectfinish")
+    button.style.color = "grey";
+    var finish = document.querySelector(".finish");
+    if (finish != null)
+    {
+      finish.className = "pass";
+    }
+  }
+  else
+  {
+    alert("Создайте таблицу");
   }
 }
 
