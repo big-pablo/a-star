@@ -112,34 +112,38 @@ function selectfinish()
 function generatemaze()
 {
   var size = parseInt(document.getElementById("size").value); //todo: как-нибудь запоминать сайз, чтобы при изменении размера в input, всё не ломалось
+  var matrix = new Array(size); //Как я прочитал, в js нет двумерных массивов
   for (let i = 0; i < size; i++)
   {
+    matrix[i] = new Array(size); //Поэтому я делаю массив массивов
     for (let k = 0; k < size; k++)
     {
-      document.getElementById(i + " " + k).className = 'impass';
+      var current = document.getElementById(i + " " + k);
+      current.className ='impass';
+      matrix[i][k] = current;
     }
   }
   var x = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-  console.log(x);
+  console.log(typeof(x));
   var y = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-  console.log(y);
-  (document.getElementById(x + " " + y)).className = 'pass';
+  console.log(typeof(y));
+  matrix[x][y].className = 'pass';
   let tocheck = new Array();
   if (y-2 >= 0)
   {
-    tocheck.push(document.getElementById(x + " " + (y - 2)));
+    tocheck.push(matrix[x][y-2]);
   }
   if (y + 2 < size)
   {
-    tocheck.push(document.getElementById(x + " " + (y + 2)));
+    tocheck.push(matrix[x][y+2]);
   }
   if (x - 2 >= 0)
   {
-    tocheck.push(document.getElementById((x - 2) + " " + y));
+    tocheck.push(matrix[x-2][y]);
   }
   if (x + 2 < size)
   {
-    tocheck.push(document.getElementById((x + 2) + " " + y));
+    tocheck.push(matrix[x+2][y]);
   }
   while (tocheck.length > 0)
   {
@@ -157,51 +161,63 @@ function generatemaze()
       switch(directions[direction])
       {
         case 'up':
-          if (y-2 >= 0 && document.getElementById(x + " " + (y-2)).className == "pass")
+          if (y-2 >= 0)
           {
-            document.getElementById(x + " " + (y-1)).className = "pass";
-            directions.splice(0,directions.length-1);
+            if (matrix[x][y-2].className == "pass")
+            {
+              matrix[x][y-1].className = "pass";
+              directions.splice(0, directions.length);
+            }
           }
           break;
         case 'down':
-          if (y+2 < size && document.getElementById(x + " " + (y+2)).className == "pass")
+          if ((y+2) < size)
           {
-            document.getElementById(x + " " + (y+1)).className = "pass";
-            directions.splice(0,directions.length-1);
+            if (matrix[x][y+2] == "pass")
+            {
+              matrix[x][y+1].className = "pass";
+              directions.splice(0, directions.length);
+            }
           }
           break;
         case 'left':
-          if (x-2>=0 && document.getElementById((x-2) + " " + y).className == "pass")
+          if (x-2>=0)
           {
-            document.getElementById((x-1) + " " + y).className = "pass";
-            directions.splice(0,directions.length-1);
+            if (matrix[x-2][y].className == "pass")
+            {
+              matrix[x-1][y].className = "pass";
+              directions.splice(0, directions.length);
+            }
           }
           break;
         case 'right':
-          if (x+2 < size && document.getElementById((x+2) + " " + y).className == "pass") //Пофиксить разбиванием на два ifы
+          if (x+2 < size) //Пофиксить разбиванием на два ifы
           {
-           document.getElementById((x+1) + " " + y).className = "pass";
-           directions.splice(0,directions.length-1);
+            if(matrix[x+2][y].className == "pass")
+            {
+              matrix[x+1][y].className = "pass";
+              directions.splice(0, directions.length);
+            }
           }
           break;
       }
       directions.splice(direction,1);
     }
-    if (y-2 >= 0 && document.getElementById(x + ' ' + (y-2)).className == "impass")
+    if (y-2 >= 0 && matrix[x][y-2].className == "impass")
   {
-    tocheck.push(document.getElementById(x + " " + (y - 2)));
+    tocheck.push(matrix[x][y-2]);
   }
-  if (y + 2 < size && document.getElementById(x + ' ' + (y+2)).className == "impass")
+  if (y + 2 < size && matrix[x][y+2].className == "impass")
   {
-    tocheck.push(document.getElementById(x + " " + (y + 2)));
+    tocheck.push(matrix[x][y+2]);
   }
-  if (x - 2 >= 0 && document.getElementById((x-2) + ' ' + y).className == "impass")
+  if (x - 2 >= 0 && matrix[x-2][y].className == "impass")
   {
-    tocheck.push(document.getElementById((x - 2) + " " + y));
+    tocheck.push(matrix[x-2][y]);
   }
-  if (x + 2 < size && document.getElementById((x+2) + ' ' + y).className == "impass")
+  if (x + 2 < size && matrix[x+2][y].className == "impass")
   {
-    tocheck.push(document.getElementById((x + 2) + " " + y));
+    tocheck.push(matrix[x+2][y]);
   }
   }
 }
