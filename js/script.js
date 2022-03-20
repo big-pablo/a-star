@@ -122,26 +122,26 @@ function generatemaze()
       current.className ='impass';
       matrix[i][k] = current;
     }
-  }
+  } console.log(matrix); 
   var x = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-  console.log(typeof(x));
+//  console.log(typeof(x));
   var y = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-  console.log(typeof(y));
+//  console.log(typeof(y));
   matrix[x][y].className = 'pass';
   let tocheck = new Array();
-  if (y-2 >= 0)
+  if (isInside(x,y-2,size))
   {
     tocheck.push(matrix[x][y-2]);
   }
-  if (y + 2 < size)
+  if (isInside(x,y+2,size))
   {
     tocheck.push(matrix[x][y+2]);
   }
-  if (x - 2 >= 0)
+  if (isInside(x-2,y,size))
   {
     tocheck.push(matrix[x-2][y]);
   }
-  if (x + 2 < size)
+  if (isInside(x+2,y,size))
   {
     tocheck.push(matrix[x+2][y]);
   }
@@ -151,17 +151,19 @@ function generatemaze()
     var toclear = tocheck[index];
     tocheck.splice(index,1);
     toclear.className = 'pass';
-    var x = toclear.getAttribute("xcoord");
-    var y = toclear.getAttribute('ycoord');
+    var x = parseInt(toclear.getAttribute("xcoord"));
+    console.log(x);
+    var y = parseInt(toclear.getAttribute('ycoord'));
+    console.log(y);
     var directions = ['up','down','left','right'];
     while (directions.length > 0)
     {
       var direction = getRandomIntInclusive(0,directions.length-1);
-      console.log(directions[direction]);
+     // console.log(directions[direction]);
       switch(directions[direction])
       {
         case 'up':
-          if (y-2 >= 0)
+          if (isInside(x,y-2,size))
           {
             if (matrix[x][y-2].className == "pass")
             {
@@ -171,7 +173,7 @@ function generatemaze()
           }
           break;
         case 'down':
-          if ((y+2) < size)
+          if (isInside(x,y+2,size))
           {
             if (matrix[x][y+2] == "pass")
             {
@@ -181,7 +183,7 @@ function generatemaze()
           }
           break;
         case 'left':
-          if (x-2>=0)
+          if (isInside(x-2,y,size))
           {
             if (matrix[x-2][y].className == "pass")
             {
@@ -191,7 +193,7 @@ function generatemaze()
           }
           break;
         case 'right':
-          if (x+2 < size) //Пофиксить разбиванием на два ifы
+          if (isInside(x+2,y,size)) //Пофиксить разбиванием на два ifы
           {
             if(matrix[x+2][y].className == "pass")
             {
@@ -203,27 +205,39 @@ function generatemaze()
       }
       directions.splice(direction,1);
     }
-    if (y-2 >= 0 && matrix[x][y-2].className == "impass")
+    if (isInside(x,y-2,size) && matrix[x][y-2].className == "impass")
   {
     tocheck.push(matrix[x][y-2]);
   }
-  if (y + 2 < size && matrix[x][y+2].className == "impass")
+  if (isInside(x,y+2,size) && matrix[x][y+2].className == "impass")
   {
     tocheck.push(matrix[x][y+2]);
   }
-  if (x - 2 >= 0 && matrix[x-2][y].className == "impass")
+  if (isInside(x-2,y,size) && matrix[x-2][y].className == "impass")
   {
     tocheck.push(matrix[x-2][y]);
   }
-  if (x + 2 < size && matrix[x+2][y].className == "impass")
+  if (isInside(x+2,y,size) && matrix[x+2][y].className == "impass")
   {
     tocheck.push(matrix[x+2][y]);
   }
   }
 }
 
+function isInside(x,y,size)
+{
+    if (x < size && x>=0 && y<size && y >=0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 function getRandomIntInclusive(min, max) { //Функция рандома, ибо Math.random в JS берёт число в промежутке 0-1
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min; 
 }
