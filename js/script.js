@@ -113,114 +113,70 @@ function generatemaze()
 {
   var size = parseInt(document.getElementById("size").value); //todo: как-нибудь запоминать сайз, чтобы при изменении размера в input, всё не ломалось
   var matrix = new Array(size); //Как я прочитал, в js нет двумерных массивов
+  var visitedmatrix = new Array(size);
   for (let i = 0; i < size; i++)
   {
     matrix[i] = new Array(size); //Поэтому я делаю массив массивов
+    visitedmatrix[i] = new Array(size);
     for (let k = 0; k < size; k++)
     {
       var current = document.getElementById(i + " " + k);
-      current.className ='impass';
-      matrix[i][k] = current;
-    }
-  } console.log(matrix); 
-  var x = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-//  console.log(typeof(x));
-  var y = getRandomIntInclusive(0,size/2-1) * 2 + 1;
-//  console.log(typeof(y));
-  matrix[x][y].className = 'pass';
-  let tocheck = new Array();
-  if (isInside(x,y-2,size))
-  {
-    tocheck.push(matrix[x][y-2]);
-  }
-  if (isInside(x,y+2,size))
-  {
-    tocheck.push(matrix[x][y+2]);
-  }
-  if (isInside(x-2,y,size))
-  {
-    tocheck.push(matrix[x-2][y]);
-  }
-  if (isInside(x+2,y,size))
-  {
-    tocheck.push(matrix[x+2][y]);
-  }
-  while (tocheck.length > 0)
-  {
-    var index = getRandomIntInclusive(0,tocheck.length-1);
-    var toclear = tocheck[index];
-    tocheck.splice(index,1);
-    toclear.className = 'pass';
-    var x = parseInt(toclear.getAttribute("xcoord"));
-    console.log(x);
-    var y = parseInt(toclear.getAttribute('ycoord'));
-    console.log(y);
-    var directions = ['up','down','left','right'];
-    while (directions.length > 0)
-    {
-      var direction = getRandomIntInclusive(0,directions.length-1);
-     // console.log(directions[direction]);
-      switch(directions[direction])
+      if (oddPosition(i,k) == false)
       {
-        case 'up':
-          if (isInside(x,y-2,size))
-          {
-            if (matrix[x][y-2].className == "pass")
-            {
-              matrix[x][y-1].className = "pass";
-              directions.splice(0, directions.length);
-            }
-          }
-          break;
-        case 'down':
-          if (isInside(x,y+2,size))
-          {
-            if (matrix[x][y+2] == "pass")
-            {
-              matrix[x][y+1].className = "pass";
-              directions.splice(0, directions.length);
-            }
-          }
-          break;
-        case 'left':
-          if (isInside(x-2,y,size))
-          {
-            if (matrix[x-2][y].className == "pass")
-            {
-              matrix[x-1][y].className = "pass";
-              directions.splice(0, directions.length);
-            }
-          }
-          break;
-        case 'right':
-          if (isInside(x+2,y,size)) //Пофиксить разбиванием на два ifы
-          {
-            if(matrix[x+2][y].className == "pass")
-            {
-              matrix[x+1][y].className = "pass";
-              directions.splice(0, directions.length);
-            }
-          }
-          break;
+        current.className ='impass';
       }
-      directions.splice(direction,1);
+      matrix[i][k] = current;
+      visitedmatrix[i][k] = false;
     }
-    if (isInside(x,y-2,size) && matrix[x][y-2].className == "impass")
-  {
-    tocheck.push(matrix[x][y-2]);
   }
-  if (isInside(x,y+2,size) && matrix[x][y+2].className == "impass")
+  var x = getRandomIntInclusive(0,size/2-1) * 2 + 1;
+  var y = getRandomIntInclusive(0,size/2-1) * 2 + 1;
+  dfs(matrix,x,y,size, visitedmatrix);
+}
+
+function dfs(matrix, x, y, size, visitedmatrix)
+{
+  visitedmatrix[x][y] = true; 
+  matrix[x][y].className = "pass";
+  var directions = ["up","down","right","left"]
+  while (directions.length != 0)
   {
-    tocheck.push(matrix[x][y+2]);
-  }
-  if (isInside(x-2,y,size) && matrix[x-2][y].className == "impass")
-  {
-    tocheck.push(matrix[x-2][y]);
-  }
-  if (isInside(x+2,y,size) && matrix[x+2][y].className == "impass")
-  {
-    tocheck.push(matrix[x+2][y]);
-  }
+    var dir = getRandomIntInclusive(0,directions.length-1);
+    switch(directions[dir])
+    {
+      case "up":
+        if (isInside(x,y-2,size) && matrix[x][y-2].className == "pass" && visitedmatrix[x][y-2] == false)
+        {
+          matrix[x][y-1].className = "pass";
+          dfs(matrix, x, y-2, size, visitedmatrix);
+        }
+        directions.splice(dir, 1);
+      break;
+      case "down":
+        if (isInside(x,y+2,size) && matrix[x][y+2].className == "pass" && visitedmatrix[x][y+2] == false)
+        {
+          matrix[x][y+1].className = "pass";
+          dfs(matrix, x, y+2, size, visitedmatrix);
+        }
+        directions.splice(dir, 1);
+      break;
+      case "right":
+        if (isInside(x-2,y,size) && matrix[x-2][y].className == "pass" && visitedmatrix[x-2][y] == false)
+        {
+          matrix[x-1][y].className = "pass";
+          dfs(matrix, x-2, y, size,visitedmatrix);
+        }
+        directions.splice(dir, 1);
+      break;
+      case "left":
+        if (isInside(x+2,y,size) && matrix[x+2][y].className == "pass" && visitedmatrix[x+2][y] == false)
+        {
+          matrix[x+1][y].className = "pass";
+          dfs(matrix, x+2, y, size, visitedmatrix);
+        }
+        directions.splice(dir, 1);
+      break;
+    }
   }
 }
 
@@ -240,4 +196,17 @@ function getRandomIntInclusive(min, max) { //Функция рандома, иб
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min; 
+}
+
+
+function oddPosition(x, y)
+{
+  if (x % 2 != 0 && y % 2 != 0)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
