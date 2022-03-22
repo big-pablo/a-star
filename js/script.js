@@ -69,7 +69,7 @@ function generate(){
   }
 }
 
-function selectstart()
+function selectStart()
 {
   if (tableGenerated)
   {
@@ -89,7 +89,7 @@ function selectstart()
   }
 }
 
-function selectfinish()
+function selectFinish()
 {
   if (tableGenerated)
   {
@@ -109,7 +109,7 @@ function selectfinish()
   }
 }
 
-function generatemaze()
+function generateMaze()
 {
   var size = parseInt(document.getElementById("size").value); //todo: как-нибудь запоминать сайз, чтобы при изменении размера в input, всё не ломалось
   var matrix = new Array(size); //Как я прочитал, в js нет двумерных массивов
@@ -145,7 +145,7 @@ function dfs(matrix, x, y, size, visitedmatrix)
     switch(directions[dir])
     {
       case "up":
-        if (isInside(x,y-2,size) && matrix[x][y-2].className == "pass" && visitedmatrix[x][y-2] == false)
+        if (isInside(x,y-2,size) && matrix[x][y-2].classList.contains("pass") && visitedmatrix[x][y-2] == false)
         {
           matrix[x][y-1].className = "pass";
           dfs(matrix, x, y-2, size, visitedmatrix);
@@ -153,7 +153,7 @@ function dfs(matrix, x, y, size, visitedmatrix)
         directions.splice(dir, 1);
       break;
       case "down":
-        if (isInside(x,y+2,size) && matrix[x][y+2].className == "pass" && visitedmatrix[x][y+2] == false)
+        if (isInside(x,y+2,size) && matrix[x][y+2].classList.contains("pass") && visitedmatrix[x][y+2] == false)
         {
           matrix[x][y+1].className = "pass";
           dfs(matrix, x, y+2, size, visitedmatrix);
@@ -161,7 +161,7 @@ function dfs(matrix, x, y, size, visitedmatrix)
         directions.splice(dir, 1);
       break;
       case "right":
-        if (isInside(x-2,y,size) && matrix[x-2][y].className == "pass" && visitedmatrix[x-2][y] == false)
+        if (isInside(x-2,y,size) && matrix[x-2][y].classList.contains("pass") && visitedmatrix[x-2][y] == false)
         {
           matrix[x-1][y].className = "pass";
           dfs(matrix, x-2, y, size,visitedmatrix);
@@ -169,7 +169,7 @@ function dfs(matrix, x, y, size, visitedmatrix)
         directions.splice(dir, 1);
       break;
       case "left":
-        if (isInside(x+2,y,size) && matrix[x+2][y].className == "pass" && visitedmatrix[x+2][y] == false)
+        if (isInside(x+2,y,size) && matrix[x+2][y].classList.contains("pass") && visitedmatrix[x+2][y] == false)
         {
           matrix[x+1][y].className = "pass";
           dfs(matrix, x+2, y, size, visitedmatrix);
@@ -180,16 +180,104 @@ function dfs(matrix, x, y, size, visitedmatrix)
   }
 }
 
-function isInside(x,y,size)
+function findPath()
 {
-    if (x < size && x>=0 && y<size && y >=0)
+  var pathFound = false;
+  var size = parseInt(document.getElementById("size").value);
+  var map = new Array(size);
+  for (let i = 0; i < size; i++)
+  {
+    map[i] = new Array(size); //Поэтому я делаю массив массивов
+    for (let j = 0; j < size; j++)
     {
-        return true;
+      map[i][j] = new Cell(document.getElementById(i + " " + j), i, j);
+      if (map[i][j].element.classList.contains("start"))
+      {
+        var start = map[i][j];
+      }
+      else if (map[i][j].element.classList.contains("finish"))
+      {
+        var finish = map[i][j];
+      }
     }
-    else
+  }
+  border = new PriorityQueue();
+  start.g = 0;
+  start.h = h(start.x, start.y, finish.x, finish.y)
+  start.f = start.h;
+  border.enqueue(start);
+  var path = [];
+  while (!border.isEmpty())
+  {
+    let current = border.dequeue();
+    if (current == finish)
     {
-        return false;
+      pathFound = true;
+      current = current.parent;
+      while (current != start)
+      {
+        path.push(current);
+        current.element.classList.add("path");
+        current = current.parent;
+      }
     }
+    current.isVisited = true;
+    var successors = [];
+    if (isInside(current.x - 1, current.y, size)) // N (i - 1, j)
+    {
+      successors.push(map[current.x - 1][current.y]);
+    }
+    if (isInside(current.x + 1, current.y, size)) // S (i + 1, j)
+    {
+      successors.push(map[current.x + 1][current.y]);
+    }
+    if (isInside(current.x, current.y + 1, size)) // E (i, j + 1)
+    {
+      successors.push(map[current.x][current.y + 1]);
+    }
+    if (isInside(current.x, current.y - 1, size)) // W (i, j - 1)
+    {
+      successors.push(map[current.x][current.y - 1]);
+    }
+    if (isInside(current.x - 1, current.y + 1, size)) // NE (i - 1, j + 1)
+    {
+      successors.push(map[current.x - 1][current.y + 1]);
+    }
+    if (isInside(current.x - 1, current.y - 1, size)) // NW (i - 1, j - 1)
+    {
+      successors.push(map[current.x - 1][current.y - 1]);
+    }
+    if (isInside(current.x + 1, current.y + 1, size)) // SE (i + 1, j + 1)
+    {
+      successors.push(map[current.x + 1][current.y + 1]);
+    }
+    if (isInside(current.x + 1, current.y - 1, size)) // SW (i + 1, j - 1)
+    {
+      successors.push(map[current.x + 1][current.y - 1]);
+    }
+    successors.forEach(successor => {
+      if (!successor.isVisited && successor.element.classList.contains("pass"))
+      {
+        successor.g = current.g + 1;
+        successor.h = h(successor.x, successor.y, finish.x, finish.y);
+        successor.f = successor.g + successor.h;
+        if (!border.data.includes(successor))
+        {
+          border.data.push(successor);
+          successor.parent = current;
+        }
+      }
+    })
+  }
+  if (!pathFound)
+  {
+    alert("Маршрут не найден");
+  }
+}
+
+function isInside(x, y, size)
+{
+  return x < size && x >= 0 && y < size && y >= 0;
 }
 
 function getRandomIntInclusive(min, max) { //Функция рандома, ибо Math.random в JS берёт число в промежутке 0-1
@@ -198,15 +286,63 @@ function getRandomIntInclusive(min, max) { //Функция рандома, иб
   return Math.floor(Math.random() * (max - min + 1)) + min; 
 }
 
-
 function oddPosition(x, y)
 {
-  if (x % 2 != 0 && y % 2 != 0)
+  return x % 2 != 0 && y % 2 != 0;
+}
+
+function h(x1, y1, x2, y2)
+{
+  return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+}
+
+class PriorityQueue
+{
+  constructor()
   {
-    return true;
+    this.data = [];
   }
-  else
+  enqueue(object)
   {
-    return false;
+    this.data.push(object);
+  }
+  dequeue()
+  {
+    let priority = this.data[0].f;
+    let position = 0;
+    this.data.forEach((element, index) => {
+      if(element.f < priority) {
+        priority = element.f;
+        position = index;
+      }
+    });
+    return this.data.splice(position, 1)[0];
+  }
+  isEmpty()
+  {
+    return this.data.length === 0;
+  } 
+  size()
+  {
+    return this.data.length;
+  }
+  clear()
+  {
+    this.data.length = 0;
+  }
+}
+
+class Cell
+{
+  constructor(element, x, y)
+  {
+    this.element = element;
+    this.x = x;
+    this.y = y;
+    this.parent = null;
+    this.f = Number.MAX_SAFE_INTEGER;
+    this.g = Number.MAX_SAFE_INTEGER;
+    this.h = Number.MAX_SAFE_INTEGER;
+    this.isVisited = false;
   }
 }
