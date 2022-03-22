@@ -4,6 +4,7 @@
 
 .action-button {
     color: blue;
+    cursor: pointer;
 }
 
 .container {
@@ -17,8 +18,8 @@ table {
 }
 
 .content {
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 30px;
 }
 
 .start {
@@ -48,6 +49,21 @@ table {
 
 .finish:active {
     background-color: hsl(350, 100%, 66%) !important;
+    cursor: pointer;
+}
+
+.path {
+    background-color: hsl(200, 100%, 50%) !important;
+    cursor: pointer;
+}
+
+.path:hover {
+    background-color: hsl(200, 100%, 55%) !important;
+    cursor: pointer;
+}
+
+.path:active {
+    background-color: hsl(200, 100%, 60%) !important;
     cursor: pointer;
 }
 
